@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Catálogo Musical</string>
+    <string name="menu_canciones">Canciones</string>
+    <string name="menu_albumes">Álbumes</string>
+    <string name="menu_artistas">Artistas</string>
+    <string name="buscar">Buscar...</string>
+    <string name="filtrar">Filtrar</string>
+    <string name="detalles">Detalles</string>
+    <string name="duracion">Duración: %s</string>
+    <string name="genero">Género: %s</string>
+    <string name="artista">Artista: %s</string>
+    <string name="album">Álbum: %s</string>
+    <string name="ano">Año: %d</string>
+</resources>
