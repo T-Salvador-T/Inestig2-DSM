@@ -6,5 +6,6 @@ data class Album(
     val artistaId: Int,
     val año: Int,
     val genero: String,
-    val portada: String = ""
+    val portada: String = "",
+    val nombreArtista: String = ""
 )

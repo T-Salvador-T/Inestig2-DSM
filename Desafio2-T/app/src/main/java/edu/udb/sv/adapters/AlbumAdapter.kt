@@ -29,7 +29,7 @@ class AlbumAdapter(
         val album = albumes[position]
 
         holder.tvTitulo.text = album.titulo
-        holder.tvArtista.text = "Artista ID: ${album.artistaId}"
+        holder.tvArtista.text = "Artista: ${album.nombreArtista}"
         holder.tvAno.text = "Año: ${album.año}"
         holder.tvGenero.text = "Género: ${album.genero}"
     }

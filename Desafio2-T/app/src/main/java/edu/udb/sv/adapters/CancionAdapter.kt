@@ -29,7 +29,7 @@ class CancionAdapter(
         val cancion = canciones[position]
 
         holder.tvTitulo.text = cancion.titulo
-        holder.tvArtista.text = "Artista ID: ${cancion.artistaId}"
+        holder.tvArtista.text = "Artista: ${cancion.nombreArtista}"
         holder.tvDuracion.text = "Duración: ${cancion.duracion}"
         holder.tvGenero.text = "Género: ${cancion.genero}"
     }
