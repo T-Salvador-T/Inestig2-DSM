@@ -54,7 +54,7 @@ class AlbumesActivity : AppCompatActivity() {
 
             // Mostrar detalles de álbumes
             albumes.forEachIndexed { index, album ->
-                Log.d("DEBUG_ALBUMES", "Álbum $index: ${album.titulo} - ArtistaID: ${album.artistaId}")
+                Log.d("DEBUG_ALBUMES", "Álbum $index: ${album.titulo} - Artista: ${album.nombreArtista}")
             }
 
             // Mostrar detalles de canciones

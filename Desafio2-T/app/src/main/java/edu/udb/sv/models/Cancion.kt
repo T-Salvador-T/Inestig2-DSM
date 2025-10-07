@@ -6,5 +6,6 @@ data class Cancion(
     val artistaId: Int,
     val albumId: Int,
     val duracion: String,
-    val genero: String
+    val genero: String,
+    val nombreArtista: String = ""
 )

@@ -118,6 +118,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 put(COLUMN_ARTISTA_ID, 1)
                 put(COLUMN_ANO, 2022)
                 put(COLUMN_GENERO, "Reggaeton")
+                put(COLUMN_PORTADA, "un_verano_sin_ti")
             },
             ContentValues().apply {
                 put(COLUMN_TITULO, "1989")
@@ -236,9 +237,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     fun getAllAlbumes(): List<Album> {
         val albumes = mutableListOf<Album>()
         val db = readableDatabase
-        val cursor = db.query(TABLE_ALBUMES, null, null, null, null, null, COLUMN_TITULO)
 
-        Log.d("DatabaseHelper", "Consultando álbumes...")
+        val query = """
+        SELECT a.${COLUMN_ID}, a.${COLUMN_TITULO}, a.${COLUMN_ARTISTA_ID},
+               a.${COLUMN_ANO}, a.${COLUMN_GENERO}, a.${COLUMN_PORTADA},
+               ar.${COLUMN_NOMBRE} AS nombreArtista
+        FROM $TABLE_ALBUMES a
+        INNER JOIN $TABLE_ARTISTAS ar ON a.${COLUMN_ARTISTA_ID} = ar.${COLUMN_ID}
+        ORDER BY a.${COLUMN_TITULO} ASC
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+
+        Log.d("DatabaseHelper", "Consultando álbumes con nombre de artista...")
 
         while (cursor.moveToNext()) {
             val album = Album(
@@ -246,26 +257,31 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 titulo = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITULO)),
                 artistaId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTISTA_ID)),
                 año = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ANO)),
-                genero = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENERO))
-                    ?: "", // Manejar NULL
-                portada = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PORTADA))
-                    ?: "" // Manejar NULL
+                genero = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENERO)) ?: "",
+                portada = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PORTADA)) ?: "",
+                nombreArtista = cursor.getString(cursor.getColumnIndexOrThrow("nombreArtista")) ?: ""
             )
             albumes.add(album)
-            Log.d("DatabaseHelper", "Álbum encontrado: ${album.titulo}")
+            Log.d("DatabaseHelper", "Álbum encontrado: ${album.titulo} - Artista: ${album.nombreArtista}")
         }
 
-        Log.d("DatabaseHelper", "Total álbumes encontrados: ${albumes.size}")
         cursor.close()
         return albumes
     }
-
     fun getAllCanciones(): List<Cancion> {
         val canciones = mutableListOf<Cancion>()
         val db = readableDatabase
-        val cursor = db.query(TABLE_CANCIONES, null, null, null, null, null, COLUMN_TITULO)
 
-        Log.d("DatabaseHelper", "Consultando canciones...")
+        val query = """
+        SELECT c.${COLUMN_ID}, c.${COLUMN_TITULO}, c.${COLUMN_ARTISTA_ID},
+               c.${COLUMN_ALBUM_ID}, c.${COLUMN_DURACION}, c.${COLUMN_GENERO},
+               a.${COLUMN_NOMBRE} AS nombreArtista
+        FROM $TABLE_CANCIONES c
+        INNER JOIN $TABLE_ARTISTAS a ON c.${COLUMN_ARTISTA_ID} = a.${COLUMN_ID}
+        ORDER BY c.${COLUMN_TITULO} ASC
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
 
         while (cursor.moveToNext()) {
             val cancion = Cancion(
@@ -273,16 +289,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 titulo = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TITULO)),
                 artistaId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ARTISTA_ID)),
                 albumId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ALBUM_ID)),
-                duracion = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DURACION))
-                    ?: "", // Manejar NULL
-                genero = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENERO))
-                    ?: "" // Manejar NULL
+                duracion = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DURACION)) ?: "",
+                genero = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GENERO)) ?: "",
+                nombreArtista = cursor.getString(cursor.getColumnIndexOrThrow("nombreArtista")) ?: ""
             )
             canciones.add(cancion)
-            Log.d("DatabaseHelper", "Canción encontrada: ${cancion.titulo}")
+            Log.d("DatabaseHelper", "Canción encontrada: ${cancion.titulo} - Artista: ${cancion.nombreArtista}")
         }
 
-        Log.d("DatabaseHelper", "Total canciones encontradas: ${canciones.size}")
         cursor.close()
         return canciones
     }
